@@ -1,0 +1,23 @@
+# Secrets
+.env
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Rebuilt by: python rag/ingest.py
+rag/chroma_store/
+
+# Written by: python -m tests.run_eval
+tests/results/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Stale copy of the knowledge base
+chroma_store/

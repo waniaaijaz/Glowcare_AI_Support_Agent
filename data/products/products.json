@@ -1,0 +1,70 @@
+{
+  "_note": "FICTIONAL DEMO DATA for GlowCare. Not a real company or real products.",
+  "products": [
+    {
+      "product_id": "GC-P001",
+      "product_name": "Hydra Balance Moisturizer",
+      "description": "A lightweight, oil-free daily moisturizer designed to hydrate without clogging pores. Absorbs quickly and leaves a matte-to-natural finish.",
+      "price": 24.99,
+      "currency": "USD",
+      "ingredients": ["Water", "Glycerin", "Hyaluronic Acid", "Niacinamide", "Dimethicone", "Phenoxyethanol"],
+      "suitable_skin_types": ["oily", "combination", "normal"],
+      "suitable_skin_concerns": ["dehydration", "shine control"],
+      "usage": "Apply a small amount to clean skin morning and night. Suitable under sunscreen or makeup.",
+      "stock_quantity": 42,
+      "availability": "in_stock"
+    },
+    {
+      "product_id": "GC-P002",
+      "product_name": "Barrier Repair Cream",
+      "description": "A rich, ceramide-based cream formulated to support and restore the skin's natural moisture barrier.",
+      "price": 32.50,
+      "currency": "USD",
+      "ingredients": ["Water", "Ceramide NP", "Cholesterol", "Fatty Acids", "Shea Butter", "Squalane"],
+      "suitable_skin_types": ["dry", "sensitive", "normal"],
+      "suitable_skin_concerns": ["barrier damage", "flakiness", "sensitivity"],
+      "usage": "Apply generously to clean skin at night. Can be layered over serums.",
+      "stock_quantity": 17,
+      "availability": "in_stock"
+    },
+    {
+      "product_id": "GC-P003",
+      "product_name": "Niacinamide Serum",
+      "description": "A 10% niacinamide serum aimed at improving the appearance of uneven texture and visible pores.",
+      "price": 19.99,
+      "currency": "USD",
+      "ingredients": ["Water", "Niacinamide 10%", "Zinc PCA", "Glycerin", "Panthenol"],
+      "suitable_skin_types": ["oily", "combination"],
+      "suitable_skin_concerns": ["visible pores", "uneven texture", "excess oil"],
+      "usage": "Apply a few drops to clean skin before moisturizer. Introduce gradually (every other day) if new to niacinamide.",
+      "stock_quantity": 0,
+      "availability": "out_of_stock"
+    },
+    {
+      "product_id": "GC-P004",
+      "product_name": "Gentle Daily Cleanser",
+      "description": "A sulfate-free, low-pH cleanser that removes impurities without stripping the skin.",
+      "price": 16.00,
+      "currency": "USD",
+      "ingredients": ["Water", "Coco-Glucoside", "Glycerin", "Panthenol", "Allantoin"],
+      "suitable_skin_types": ["all skin types", "sensitive"],
+      "suitable_skin_concerns": ["sensitivity", "dryness after cleansing"],
+      "usage": "Massage onto damp skin morning and night, rinse with lukewarm water.",
+      "stock_quantity": 65,
+      "availability": "in_stock"
+    },
+    {
+      "product_id": "GC-P005",
+      "product_name": "Lightweight Sunscreen SPF 50",
+      "description": "A broad-spectrum SPF 50 sunscreen with a light, non-greasy finish suitable for daily wear.",
+      "price": 21.00,
+      "currency": "USD",
+      "ingredients": ["Water", "Zinc Oxide", "Titanium Dioxide", "Glycerin", "Dimethicone"],
+      "suitable_skin_types": ["all skin types", "oily", "sensitive"],
+      "suitable_skin_concerns": ["sun protection"],
+      "usage": "Apply generously as the last step of your morning routine. Reapply every 2 hours if in direct sun.",
+      "stock_quantity": 8,
+      "availability": "in_stock"
+    }
+  ]
+}

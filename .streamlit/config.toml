@@ -1,0 +1,4 @@
+[server]
+# Streamlit's file watcher scans every imported library and prints errors for
+# the search model's dependencies, so it is off. Refresh the page after edits.
+fileWatcherType = "none"

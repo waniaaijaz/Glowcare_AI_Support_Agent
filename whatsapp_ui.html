@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GlowCare on WhatsApp (demo)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 12px;
+    display: flex;
+    justify-content: center;
+    background: #0b141a;
+    font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .phone {
+    width: 390px;
+    max-width: 100%;
+    height: 720px;
+    max-height: calc(100vh - 48px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #0b141a;
+    box-shadow: 0 0 40px rgba(0, 0, 0, .5);
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #202c33;
+    color: #e9edef;
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #25d366;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .name { font-weight: 600; }
+  .status { font-size: 12px; color: #8696a0; }
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    background: #0b141a;
+  }
+  .msg {
+    position: relative;
+    max-width: 78%;
+    margin-bottom: 8px;
+    padding: 7px 10px 18px;
+    border-radius: 8px;
+    color: #e9edef;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .msg .time {
+    position: absolute;
+    right: 8px;
+    bottom: 3px;
+    font-size: 10px;
+    color: #8696a0;
+  }
+  .bot { background: #202c33; border-top-left-radius: 0; }
+  .user { margin-left: auto; background: #005c4b; border-top-right-radius: 0; }
+  .typing { padding-bottom: 7px; }
+  .typing span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 3px;
+    border-radius: 50%;
+    background: #8696a0;
+    animation: blink 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: .2s; }
+  .typing span:nth-child(3) { animation-delay: .4s; margin-right: 0; }
+  @keyframes blink { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
+  .quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid #202c33;
+  }
+  .chip {
+    padding: 6px 12px;
+    border: 1px solid #00a884;
+    border-radius: 16px;
+    background: #202c33;
+    color: #00a884;
+    font-size: 12.5px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .chip:hover { background: #00a884; color: #fff; }
+  .inputbar {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: #202c33;
+  }
+  .inputbar input {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    background: #2a3942;
+    color: #e9edef;
+    font-size: 14px;
+  }
+  .inputbar button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #00a884;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .inputbar button:disabled { opacity: .5; cursor: default; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="header">
+    <div class="avatar">GC</div>
+    <div>
+      <div class="name">GlowCare</div>
+      <div class="status">online</div>
+    </div>
+  </div>
+  <div class="chat" id="chat"></div>
+  <div class="quick">
+    <div class="chip" data-q="Where is my order GC10241?">📦 Track order</div>
+    <div class="chip" data-q="How much is the Niacinamide Serum?">💰 Prices</div>
+    <div class="chip" data-q="Can I return a product after opening it?">↩️ Return policy</div>
+    <div class="chip" data-q="Connect me with a team member">🧑‍💼 Talk to a person</div>
+  </div>
+  <div class="inputbar">
+    <input id="input" placeholder="Type a message" autocomplete="off">
+    <button id="send" aria-label="Send">➤</button>
+  </div>
+</div>
+
+<script>
+  const API_URL = "http://localhost:8000/chat";
+  // A new id on every page load, so reloading the page starts a fresh chat.
+  const SESSION = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+                  : String(Date.now()) + Math.random().toString(16).slice(2);
+
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
+  const sendButton = document.getElementById("send");
+  let waiting = false;
+
+  function clock() {
+    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function addMessage(text, who) {
+    const bubble = document.createElement("div");
+    bubble.className = "msg " + who;
+    bubble.textContent = text;
+    const time = document.createElement("span");
+    time.className = "time";
+    time.textContent = clock();
+    bubble.appendChild(time);
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight;
+    return bubble;
+  }
+
+  function addTyping() {
+    const bubble = document.createElement("div");
+    bubble.className = "msg bot typing";
+    bubble.innerHTML = "<span></span><span></span><span></span>";
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight;
+    return bubble;
+  }
+
+  async function ask(text) {
+    text = text.trim();
+    if (!text || waiting) return;
+    waiting = true;
+    sendButton.disabled = true;
+    addMessage(text, "user");
+    const typing = addTyping();
+    let reply;
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, session: SESSION }),
+      });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      reply = (await response.json()).reply;
+    } catch (error) {
+      reply = "Could not reach the agent server. Start it with:\npython -m uvicorn whatsapp_demo:app --port 8000";
+    }
+    typing.remove();
+    addMessage(reply, "bot");
+    waiting = false;
+    sendButton.disabled = false;
+    input.focus();
+  }
+
+  sendButton.addEventListener("click", () => { const t = input.value; input.value = ""; ask(t); });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") { const t = input.value; input.value = ""; ask(t); }
+  });
+  document.querySelectorAll(".chip").forEach((chip) =>
+    chip.addEventListener("click", () => ask(chip.dataset.q)));
+
+  addMessage("Hi! I'm the GlowCare assistant. Ask me about products, orders or policies.", "bot");
+  input.focus();
+</script>
+</body>
+</html>
