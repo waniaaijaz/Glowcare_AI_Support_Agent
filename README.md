@@ -182,6 +182,3 @@ SYSTEM_RULES.md      rules sent with every LLM call
 - Replies in another language take one or two extra small LLM calls, so they are a little slower.
 - The demo server has no authentication or rate limiting and isn't meant to face the internet.
 
-## Author
-
-**Your Name** · [LinkedIn](ADD_LINKEDIN_URL) · [Email](mailto:ADD_EMAIL)
